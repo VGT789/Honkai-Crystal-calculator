@@ -24,7 +24,7 @@ html,body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
   </div>
   <div class="w3-bar-block">
     <a href="#" class="w3-bar-item w3-button w3-padding-16 w3-hide-large w3-dark-grey w3-hover-black" onclick="w3_close()" title="close menu"><i class="fa fa-remove fa-fw"></i>  Close Menu</a>
-    <a href="#" class="w3-bar-item w3-button w3-padding w3-blue">  Honkai Impact Whaling Calculator</a>
+    <a href="#" class="w3-bar-item w3-button w3-padding w3-blue">  HI3rd Crystal Calculator</a>
   </div>
 </nav>
 
@@ -37,50 +37,101 @@ html,body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
 
   <!-- Header -->
   <header class="w3-container" style="padding-top:22px">
-    <h5><b>Whaling Calculator</b></h5>
+    <h5><b>Honkai Impact 3rd Crystal Calculator</b></h5>
   </header>
+
+  <div class="w3-container">
+    <p>Use this tool to find out how many crystals you will have by the end of a banner in order to maximize your whaling efficiency. BP rewards aren't included because I can't calculate where you are in the battle pass.</p>
+  </div>
 
   <div class="w3-container">
     <table class="w3-table w3-striped w3-white">
         <tr> <!--Banner End Date-->
-            <td>When does the supply banner end?</td>
-            <td>Input</td>
-            <td>days until end</td>
+            <td>When Does the Supply Banner End?</td>
+            <td><input type="date" id="banner-end-date"></td>
+            <td id="days-until-end">days until end</td>
+        </tr>
+        <tr><!--Current Crystals-->
+            <td>Current Crystals</td>
+            <td>
+                <input type="number" id="current-crystals" min="0" step="1">
+            </td>
+            <td>Current Crystals</td>
         </tr>
         <tr> <!--Daily Duty-->
             <td>Daily Duty Rewards</td>
-            <td>Input</td>
+            <td>40/day</td>
             <td>Crystals</td>
         </tr>
         <tr><!--Captain Level Bracket-->
             <td>Level Bracket</td>
-            <td>Input</td>
-            <td>Crystals</td>
+            <td>
+                <select id="level-bracket">
+                    <option value="exalted">Exalted (Lv. 81+)</option>
+                    <option value="master">Master (Lv. 70-80)</option>
+                    <option value="elite">Elite (Lv. 56-70)</option>
+                    <option value="basic">Basic (Lv. 1-55)</option>
+                </select>
+            </td>
+            <td></td>
         </tr>
         <tr><!--Abyss Tier-->
             <td>Abyss Bracket (Dirac Sea/Q-Singularis/Superstring Dimension)</td>
-            <td>Input</td>
+            <td>
+                <select id="abyss-tier">
+                    <option value="nirv">Nirvana</option>
+                    <option value="rl">Red Lotus</option>
+                    <option value="a3">Agony III</option>
+                    <option value="a2">Agony II</option>
+                    <option value="a1">Agony I</option>
+                    <option value="s3">Sinful III</option>
+                    <option value="s2">Sinful II</option>
+                    <option value="s1">Sinful I</option>
+                    <option value="f">Forbidden</option>
+                </select>
+            </td>
             <td>Crystals</td>
         </tr>
         <tr><!--Memorial Arena-->
             <td>Memorial Arena</td>
-            <td>Input</td>
+            <!--
+                Exalted 100/week
+                Master 50/week
+                Elite ??
+                Basic ??
+            -->
+            <td>
+                Level Dependent
+            </td>
             <td>Crystals</td>
         </tr>
         <tr><!--Armada Contribution-->
             <td>Armada Contribution</td>
-            <td>Input</td>
+            <td>
+                <input type="checkbox" id="armada" checked>
+                <label for="armada">Armada Isn't Dead</label>
+            </td>
             <td>Crystals</td>
         </tr>
         <tr><!--Monthly Crystal Card-->
-            <td>Monthly Crystal Card?</td>
-            <td>Input</td>
+            <td>Monthly Crystal Card</td>
+            <td>
+                <input type="checkbox" id="monthly-card" checked>
+                <label for="monthly-card">Monthly Card Active</label>
+            </td>
             <td>Crystals</td>
         </tr>
         <tr><!--Monthly Crystal Card 15-day Progress-->
-            <td>Card Progress</td>
-            <td>Input</td>
+            <td>Current Card Progress</td>
+            <td>
+                <input type="number" id="card-progress" min="1" max="15" step="1" value="1">/15
+            </td>
             <td>Crystals</td>
+        </tr>
+        <tr><!--Total-->
+            <td><b>Total Crystals by </b><b>End Date</b></td>
+            <td></td>
+            <td><b>Total</b></td>
         </tr>
     </table>
   </div>
@@ -117,6 +168,7 @@ function w3_close() {
   overlayBg.style.display = "none";
 }
 </script>
+<script src="whale.js"></script>
 
 </body>
 </html>
