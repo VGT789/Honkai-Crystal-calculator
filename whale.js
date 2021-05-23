@@ -1,7 +1,14 @@
 const selectEndDate = document.getElementById('banner-end-date');
-if(selectEndDate){
-    selectEndDate.addEventListener('change', determineDaysUntilEnd);
-}
+const inputCurrentCrystals = document.getElementById('in-current-crystals');
+
+selectEndDate.addEventListener('change', determineDaysUntilEnd);
+inputCurrentCrystals.addEventListener('change', setCurrentCrystals);
+
+
+// Package variables
+var DaysLeft = 0;
+var CurrentCrystals = 0;
+var DailyDutyRewards = 0;
 
 function determineDaysUntilEnd(e){
     
@@ -20,7 +27,20 @@ function determineDaysUntilEnd(e){
         Days_Until_End = Math.ceil(Today_to_EndDate / (1000*60*60*24));
     }
 
-    // If N is positive
-    // Set the days remaining to N
-    document.getElementById('days-until-end').innerText = Days_Until_End;
+    // Output
+    document.getElementById('days-until-end').innerText = Days_Until_End + " days left";
+    DaysLeft = Days_Until_End;
+
+}
+
+function setCurrentCrystals(e){
+    
+    // Output
+    document.getElementById('current-crystals').innerText = e.target.value;
+    CurrentCrystals = e.target.value;
+}
+
+function determineDailyDuty(e){
+    // Output
+    
 }
