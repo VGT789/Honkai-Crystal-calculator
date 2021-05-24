@@ -68,6 +68,7 @@ var MemorialArenaRewards = 0;
 var ArmadaRewards = 0;
 var MonthlyCardRewards = 0;
 var MonthlyCardProgress = 1;
+var TotalCrystalRewards = 0;
 
 var LevelBracket = levelBracketType.EXALTED;
 var AbyssTier = AbyssTierType.RED_LOTUS;
@@ -84,6 +85,7 @@ function updateCalculations(){
     determineAbyssRewards(AbyssTierMultiplier);
     determineArmadaRewards(DaysLeft);
     determineMonthlyCardRewards(DaysLeft);
+    determineTotalCrystalRewards();
 }
 
 function determineDaysUntilEnd(e){
@@ -142,8 +144,10 @@ function determineMAWeeksLeft(d){
 function setCurrentCrystals(e){
     
     // Output
-    document.getElementById('current-crystals').innerText = e.target.value;
+    document.getElementById('current-crystals').innerText = parseInt(e.target.value,10);
     CurrentCrystals = parseInt(e.target.value,10);
+
+    determineTotalCrystalRewards()
 }
 
 function determineDailyDuty(days){
@@ -152,6 +156,7 @@ function determineDailyDuty(days){
     // Output
     document.getElementById('duty-rewards').innerText = DailyDutyRewards;
 
+    determineTotalCrystalRewards()
 }
 
 function setLevelBracket(e){
@@ -236,6 +241,7 @@ function determineAbyssTier(e){
 function determineAbyssRewards(mult){
     AbyssRewards = mult * AbyssWeeksLeft;
     document.getElementById('abyss-crystals').innerText = AbyssRewards;
+    determineTotalCrystalRewards()
 }
 
 function determineMemorialArenaRewards(bracket) {
@@ -260,8 +266,11 @@ function determineMemorialArenaRewards(bracket) {
     }
 
     // Output
-    document.getElementById('ma-mult').innerText = MA_Multiplier + " per cycle";
-    document.getElementById('ma-rewards').innerText = MA_Multiplier * MAWeeksLeft;
+    MemorialArenaRewards = MA_Multiplier * MAWeeksLeft;
+    document.getElementById('ma-mult').innerText = MemorialArenaRewards + " per cycle";
+    document.getElementById('ma-rewards').innerText = MemorialArenaRewards;
+
+    determineTotalCrystalRewards()
 }
 
 function setMonthlyCard(e){
@@ -274,6 +283,8 @@ function setMonthlyCard(e){
         MonthlyCard = false;
         document.getElementById("card-progress-row").hidden = 'true';
     }
+
+    determineMonthlyCardRewards(DaysLeft);
 }
 
 function determineMonthlyCardRewards(d){
@@ -281,8 +292,10 @@ function determineMonthlyCardRewards(d){
     // Calculate number of 15 day rewards to collect
     let CardEpochs = Math.floor((d + MonthlyCardProgress) / 15);
 
-    MonthlyCardRewards = d * 60 + CardEpochs * 500;
+    MonthlyCardRewards = MonthlyCard ? (d * 60 + CardEpochs * 500) : 0;
     document.getElementById('card-rewards').innerText = MonthlyCardRewards;
+
+    determineTotalCrystalRewards()
 }
 
 function setMonthlyCardProgress(e){
@@ -293,7 +306,6 @@ function setMonthlyCardProgress(e){
 function setArmadaActive(e){
 
     ActiveArmada = checkboxArmadaActive.checked;
-
     determineArmadaRewards(DaysLeft);
 }
 
@@ -315,4 +327,18 @@ function determineArmadaRewards(d){
     determineArmadaWeeksLeft(d);
     ArmadaRewards = ActiveArmada ? ArmadaWeeksLeft * 25 : 0;
     document.getElementById('armada-rewards').innerText = ArmadaRewards;
+
+    determineTotalCrystalRewards()
+}
+
+function determineTotalCrystalRewards(){
+    
+    TotalCrystalRewards = CurrentCrystals +
+        DailyDutyRewards +
+        AbyssRewards +
+        MemorialArenaRewards + 
+        ArmadaRewards + 
+        MonthlyCardRewards;
+
+    document.getElementById('total-rewards').innerText = TotalCrystalRewards;
 }
