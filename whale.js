@@ -5,12 +5,18 @@ const inputCurrentCrystals = document.getElementById('in-current-crystals');
 const selectBracket = document.getElementById('level-bracket');
 const selectExaltedAbyssTier = document.getElementById('select-exalted-abyss-tier');
 const selectAbyssTier = document.getElementById('select-abyss-tier');
+const checkboxMonthlyCard = document.getElementById('monthly-card');
+const checkboxArmadaActive = document.getElementById('armada');
+const inputCardProgress = document.getElementById('card-progress');
 
 selectEndDate.addEventListener('change', determineDaysUntilEnd);
 inputCurrentCrystals.addEventListener('change', setCurrentCrystals);
 selectBracket.addEventListener('change', setLevelBracket);
 selectExaltedAbyssTier.addEventListener('change', determineAbyssTier);
 selectAbyssTier.addEventListener('change', determineAbyssTier);
+checkboxMonthlyCard.addEventListener('change',setMonthlyCard);
+checkboxArmadaActive.addEventListener('change',setArmadaActive);
+inputCardProgress.addEventListener('change', setMonthlyCardProgress);
 
 // Constants
 const hidden = 'hidden';
@@ -32,14 +38,14 @@ const AbyssTierType = {
     FORBIDDEN:8
 }
 const ABYSS_REWARD_MULT = [
-    // Exalted
-    // Nirv, RL, A3, A2, A1, S3, S2, S1, F
+    // Exalted=0
+    // Nirv=0, RL=1, A3=2, A2=3, A1=4, S3=5, S2=6, S1=7, F=8
     [520,500,420,340,280,220,200,190,180],
-    // Master
+    // Master=1
     [0,420,0,0,260,0,0,180,80],
-    // Elite
+    // Elite=2
     [0,350,0,0,220,0,0,140,70],
-    // Basic
+    // Basic=3
     [0,300,0,0,180,0,0,100,60]
 ]
 const MA_REWARD_MULT = {
@@ -51,12 +57,34 @@ const MA_REWARD_MULT = {
 
 // Package variables
 var DaysLeft = 0;
-var MAWeeksLeft = 2;
+var MAWeeksLeft = 0;
+var AbyssWeeksLeft = 0;
+var ArmadaWeeksLeft = 0;
+
 var CurrentCrystals = 0;
 var DailyDutyRewards = 0;
+var AbyssRewards = 0;
+var MemorialArenaRewards = 0;
+var ArmadaRewards = 0;
+var MonthlyCardRewards = 0;
+var MonthlyCardProgress = 1;
+
 var LevelBracket = levelBracketType.EXALTED;
 var AbyssTier = AbyssTierType.RED_LOTUS;
-var MemorialArenaRewards = 0;
+var AbyssTierMultiplier = ABYSS_REWARD_MULT[0][2];
+
+var ActiveArmada = true;
+var MonthlyCard = true;
+
+function updateCalculations(){
+    determineDailyDuty(DaysLeft);
+    determineMAWeeksLeft(DaysLeft);
+    determineAbyssWeeksLeft(DaysLeft);
+    determineMemorialArenaRewards(LevelBracket);
+    determineAbyssRewards(AbyssTierMultiplier);
+    determineArmadaRewards(DaysLeft);
+    determineMonthlyCardRewards(DaysLeft);
+}
 
 function determineDaysUntilEnd(e){
     
@@ -78,20 +106,44 @@ function determineDaysUntilEnd(e){
     // Output
     document.getElementById('days-until-end').innerText = Days_Until_End + " days left";
     DaysLeft = Days_Until_End;
-    determineDailyDuty(DaysLeft);
-    determineMemorialArenaRewards(LevelBracket);
-    //determineMAWeeksLeft(DaysLeft);
+    updateCalculations();
 }
 
-function determineMAWeeksLeft(d) {
+function determineAbyssWeeksLeft(d){
+
+    let today = new Date();
+
+    // Weeks = floor(days/7)
+    let weeks = Math.floor(d/7);
+    // Days left mod 7 = end day offset
+    let end_day_offset = d % 7;
+    // (end day offset + today) mod 7 = end day
+    let end_day = (end_day_offset + today.getDay()) % 7;
     
+    // MA weeks = weeks + 1 if end_day >= wednesday
+    AbyssWeeksLeft = 2 * weeks + ((((end_day >= 3) && (today.getDay() <= 3)) || ((end_day >= 0)&&(today.getDay() >= 3))) ? 1 : 0);
+}
+
+function determineMAWeeksLeft(d){
+    
+    let today = new Date();
+
+    // Weeks = floor(days/7)
+    let weeks = Math.floor(d/7);
+    // Days left mod 7 = end day offset
+    let end_day_offset = d % 7;
+    // (end day offset + today) mod 7 = end day
+    let end_day = (end_day_offset + today.getDay()) % 7;
+    
+    // MA weeks = weeks + 1 if end_day >= wednesday
+    MAWeeksLeft = weeks + ((end_day >= 3) ? 1 : 0);
 }
 
 function setCurrentCrystals(e){
     
     // Output
     document.getElementById('current-crystals').innerText = e.target.value;
-    CurrentCrystals = e.target.value;
+    CurrentCrystals = parseInt(e.target.value,10);
 }
 
 function determineDailyDuty(days){
@@ -174,8 +226,16 @@ function determineAbyssTier(e){
     }
 
     Crystal_Multiplier = ABYSS_REWARD_MULT[LevelBracket][AbyssTier];
+
     // Output
-    document.getElementById('abyss-crystals').innerText = Crystal_Multiplier;
+    AbyssTierMultiplier = Crystal_Multiplier;
+    determineAbyssRewards(AbyssTierMultiplier);
+    
+}
+
+function determineAbyssRewards(mult){
+    AbyssRewards = mult * AbyssWeeksLeft;
+    document.getElementById('abyss-crystals').innerText = AbyssRewards;
 }
 
 function determineMemorialArenaRewards(bracket) {
@@ -202,4 +262,57 @@ function determineMemorialArenaRewards(bracket) {
     // Output
     document.getElementById('ma-mult').innerText = MA_Multiplier + " per cycle";
     document.getElementById('ma-rewards').innerText = MA_Multiplier * MAWeeksLeft;
+}
+
+function setMonthlyCard(e){
+    
+    if(checkboxMonthlyCard.checked){
+        MonthlyCard = true;
+        document.getElementById("card-progress-row").removeAttribute(hidden);
+    }
+    else {
+        MonthlyCard = false;
+        document.getElementById("card-progress-row").hidden = 'true';
+    }
+}
+
+function determineMonthlyCardRewards(d){
+
+    // Calculate number of 15 day rewards to collect
+    let CardEpochs = Math.floor((d + MonthlyCardProgress) / 15);
+
+    MonthlyCardRewards = d * 60 + CardEpochs * 500;
+    document.getElementById('card-rewards').innerText = MonthlyCardRewards;
+}
+
+function setMonthlyCardProgress(e){
+    MonthlyCardProgress = parseInt(e.target.value,10);
+    determineMonthlyCardRewards(DaysLeft);
+}
+
+function setArmadaActive(e){
+
+    ActiveArmada = checkboxArmadaActive.checked;
+
+    determineArmadaRewards(DaysLeft);
+}
+
+function determineArmadaWeeksLeft(d){
+    let today = new Date();
+
+    // Weeks = floor(days/7)
+    let weeks = Math.floor(d/7);
+    // Days left mod 7 = end day offset
+    let end_day_offset = d % 7;
+    // (end day offset + today) mod 7 = end day
+    let end_day = (end_day_offset + today.getDay()) % 7;
+    
+    // MA weeks = weeks + 1 if end_day >= monday
+    ArmadaWeeksLeft = weeks + ((end_day >= 1) ? 1 : 0);
+}
+
+function determineArmadaRewards(d){
+    determineArmadaWeeksLeft(d);
+    ArmadaRewards = ActiveArmada ? ArmadaWeeksLeft * 25 : 0;
+    document.getElementById('armada-rewards').innerText = ArmadaRewards;
 }

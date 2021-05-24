@@ -78,9 +78,9 @@
             <tr><!--Abyss Tier-->
                 <td>Abyss Tier (Dirac Sea/Q-Singularis/Superstring Dimension)</td>
                 <td>
-                    <select id="select-exalted-abyss-tier">
+                    <select id="select-exalted-abyss-tier" >
                         <option value="nirv">Nirvana</option>
-                        <option value="rl">Red Lotus</option>
+                        <option value="rl" selected>Red Lotus</option>
                         <option value="a3">Agony III</option>
                         <option value="a2">Agony II</option>
                         <option value="a1">Agony I</option>
@@ -90,20 +90,18 @@
                         <option value="f">Forbidden</option>
                     </select>
                     <select id="select-abyss-tier" hidden="true">
-                        <option value="rl">Red Lotus</option>
+                        <option value="rl" selected>Red Lotus</option>
                         <option value="a1">Agony</option>
                         <option value="s1">Sinful</option>
                         <option value="f">Forbidden</option>
                     </select>
                 </td>
-                <td id="abyss-crystals">Crystals</td>
+                <td id="abyss-crystals">0</td>
             </tr>
             <tr><!--Memorial Arena-->
                 <td>Memorial Arena</td>
-                <td id="ma-mult">
-                    Level Dependent
-                </td>
-                <td id="ma-rewards">Crystals</td>
+                <td id="ma-mult"></td>
+                <td id="ma-rewards">0</td>
             </tr>
             <tr><!--Armada Contribution-->
                 <td>Armada Contribution</td>
@@ -111,7 +109,7 @@
                     <input type="checkbox" id="armada" checked>
                     <label for="armada">Armada Isn't Dead</label>
                 </td>
-                <td>Crystals</td>
+                <td id="armada-rewards">0</td>
             </tr>
             <tr><!--Monthly Crystal Card-->
                 <td>Monthly Crystal Card</td>
@@ -119,14 +117,14 @@
                     <input type="checkbox" id="monthly-card" checked>
                     <label for="monthly-card">Monthly Card Active</label>
                 </td>
-                <td>Crystals</td>
+                <td id="card-rewards">Crystals</td>
             </tr>
-            <tr><!--Monthly Crystal Card 15-day Progress-->
+            <tr id="card-progress-row"><!--Monthly Crystal Card 15-day Progress-->
                 <td>Current Card Progress</td>
                 <td>
                     <input type="number" id="card-progress" min="1" max="15" step="1" value="1">/15
                 </td>
-                <td>Crystals</td>
+                <td></td>
             </tr>
             <tr><!--Total-->
                 <td><b>Total Crystals by </b><b>End Date</b></td>
@@ -140,26 +138,6 @@
     <footer class="w3-container w3-padding-16 w3-light-grey">
         <p>Powered by <a href="https://www.w3schools.com/w3css/default.asp" target="_blank">w3.css</a></p>
     </footer>
-
-    <!--Datalists-->
-    <!--Abyss Tier Options-->
-    <datalist id="exalted-abyss-tiers">
-        <option>Nirvana</option>
-        <option>Red Lotus</option>
-        <option>Agony III</option>
-        <option>Agony II</option>
-        <option>Agony I</option>
-        <option>Sinful III</option>
-        <option>Sinful II</option>
-        <option>Sinful I</option>
-        <option>Forbidden</option>
-    </datalist>
-    <datalist id="basic-abyss-tiers" >
-        <option>Red Lotus</option>
-        <option>Agony</option>
-        <option>Sinful</option>
-        <option>Forbidden</option>
-    </datalist>
 
     <!-- End page content -->
     </div>
