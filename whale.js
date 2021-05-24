@@ -15,22 +15,33 @@ selectAbyssTier.addEventListener('change', determineAbyssTier);
 // Constants
 const hidden = 'hidden';
 const levelBracketType = {
-    EXALTED:'exalted',
-    MASTER:'master',
-    ELITE:'elite',
-    BASIC:'basic'
+    EXALTED:0,
+    MASTER:1,
+    ELITE:2,
+    BASIC:3
 }
 const AbyssTierType = {
-    NIRVANA:'nirvana',
-    RED_LOTUS:'rl',
-    AGONY_3:'a3',
-    AGONY_2:'a2',
-    AGONY_1:'a1',
-    SINFUL_3:'s3',
-    SINFUL_2:'s1',
-    SINFUL_1:'s1',
-    FORBIDDEN:'f'
+    NIRVANA:0,
+    RED_LOTUS:1,
+    AGONY_3:2,
+    AGONY_2:3,
+    AGONY_1:4,
+    SINFUL_3:5,
+    SINFUL_2:6,
+    SINFUL_1:7,
+    FORBIDDEN:8
 }
+const ABYSS_REWARD_MULT = [
+    // Exalted
+    // Nirv, RL, A3, A2, A1, S3, S2, S1, F
+    [520,500,420,340,280,220,200,190,180],
+    // Master
+    [0,420,0,0,260,0,0,180,80],
+    // Elite
+    [0,350,0,0,220,0,0,140,70],
+    // Basic
+    [0,300,0,0,180,0,0,100,60]
+]
 const MA_REWARD_MULT = {
     EXALTED:100,
     MASTER:90,
@@ -40,7 +51,7 @@ const MA_REWARD_MULT = {
 
 // Package variables
 var DaysLeft = 0;
-var MAWeeksLeft = 0;
+var MAWeeksLeft = 2;
 var CurrentCrystals = 0;
 var DailyDutyRewards = 0;
 var LevelBracket = levelBracketType.EXALTED;
@@ -69,7 +80,11 @@ function determineDaysUntilEnd(e){
     DaysLeft = Days_Until_End;
     determineDailyDuty(DaysLeft);
     determineMemorialArenaRewards(LevelBracket);
-    determineMAWeeksLeft(DaysLeft);
+    //determineMAWeeksLeft(DaysLeft);
+}
+
+function determineMAWeeksLeft(d) {
+    
 }
 
 function setCurrentCrystals(e){
@@ -123,6 +138,8 @@ function setLevelBracket(e){
 
 function determineAbyssTier(e){
 
+    let Crystal_Multiplier = 0;
+
     // Save off abyss tier
     switch(e.target.value){
         case 'nirv':
@@ -156,29 +173,33 @@ function determineAbyssTier(e){
             AbyssTier = AbyssTierType.RED_LOTUS;
     }
 
+    Crystal_Multiplier = ABYSS_REWARD_MULT[LevelBracket][AbyssTier];
     // Output
-    document.getElementById('abyss-crystals').innerText = "0";
+    document.getElementById('abyss-crystals').innerText = Crystal_Multiplier;
 }
 
 function determineMemorialArenaRewards(bracket) {
 
+    let MA_Multiplier = 0;
+
     switch(bracket) {
         case levelBracketType.EXALTED:
-            MemorialArenaRewards = MA_REWARD_MULT.EXALTED * MAWeeksLeft;
+            MA_Multiplier = MA_REWARD_MULT.EXALTED;
             break;
         case levelBracketType.MASTER:
-            MemorialArenaRewards = MA_REWARD_MULT.MASTER * MAWeeksLeft;
+            MA_Multiplier = MA_REWARD_MULT.MASTER;
             break;
         case levelBracketType.ELITE:
-            MemorialArenaRewards = MA_REWARD_MULT.ELITE * MAWeeksLeft;
+            MA_Multiplier = MA_REWARD_MULT.ELITE;
             break;
         case levelBracketType.BASIC:
-            MemorialArenaRewards = MA_REWARD_MULT.BASIC * MAWeeksLeft;
+            MA_Multiplier = MA_REWARD_MULT.BASIC;
             break;
         default:
             MemorialArenaRewards = 0;
     }
 
     // Output
-    document.getElementById('ma-rewards').innerText = MemorialArenaRewards;
+    document.getElementById('ma-mult').innerText = MA_Multiplier + " per cycle";
+    document.getElementById('ma-rewards').innerText = MA_Multiplier * MAWeeksLeft;
 }
