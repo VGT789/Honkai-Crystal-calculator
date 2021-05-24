@@ -122,8 +122,8 @@ function determineAbyssWeeksLeft(d){
     // (end day offset + today) mod 7 = end day
     let end_day = (end_day_offset + today.getDay()) % 7;
     
-    // MA weeks = weeks + 1 if end_day >= wednesday
-    AbyssWeeksLeft = 2 * weeks + ((((end_day >= 3) && (today.getDay() <= 3)) || ((end_day >= 0)&&(today.getDay() >= 3))) ? 1 : 0);
+    // Abyss weeks = weeks + 1 if end_day > wednesday or sunday and today is between abyss cycles
+    AbyssWeeksLeft = 2 * weeks + ((((end_day > 3) && (today.getDay() <= 3)) || ((end_day > 0)&&(today.getDay() >= 3))) ? 1 : 0);
 }
 
 function determineMAWeeksLeft(d){
