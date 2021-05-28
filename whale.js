@@ -267,7 +267,7 @@ function determineMemorialArenaRewards(bracket) {
 
     // Output
     MemorialArenaRewards = MA_Multiplier * MAWeeksLeft;
-    document.getElementById('ma-mult').innerText = MemorialArenaRewards + " per cycle";
+    document.getElementById('ma-mult').innerText = MA_Multiplier + " per cycle";
     document.getElementById('ma-rewards').innerText = MemorialArenaRewards;
 
     determineTotalCrystalRewards()
