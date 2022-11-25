@@ -8,15 +8,17 @@ const selectAbyssTier = document.getElementById('select-abyss-tier');
 const checkboxMonthlyCard = document.getElementById('monthly-card');
 const checkboxArmadaActive = document.getElementById('armada');
 const inputCardProgress = document.getElementById('card-progress');
+const selectErTier= document.getElementById('ER-difficulty-level');
 
 selectEndDate.addEventListener('change', determineDaysUntilEnd);
 inputCurrentCrystals.addEventListener('change', setCurrentCrystals);
 selectBracket.addEventListener('change', setLevelBracket);
 selectExaltedAbyssTier.addEventListener('change', determineAbyssTier);
 selectAbyssTier.addEventListener('change', determineAbyssTier);
-checkboxMonthlyCard.addEventListener('change',setMonthlyCard);
 checkboxArmadaActive.addEventListener('change',setArmadaActive);
 inputCardProgress.addEventListener('change', setMonthlyCardProgress);
+selectErTier.addEventListener('change', setERdifficulty);
+checkboxMonthlyCard.addEventListener('change',setMonthlyCard);
 
 // Constants
 const hidden = 'hidden';
@@ -37,6 +39,14 @@ const AbyssTierType = {
     SINFUL_1:7,
     FORBIDDEN:8
 }
+const ERdifficultyType = {
+    Abstinence:0,
+    Submergence:1,
+    Inferno:2,
+    Shroud:3,
+    Void:4,
+    No:5
+}
 const ABYSS_REWARD_MULT = [
     // Exalted=0
     // Nirv=0, RL=1, A3=2, A2=3, A1=4, S3=5, S2=6, S1=7, F=8
@@ -54,7 +64,14 @@ const MA_REWARD_MULT = {
     ELITE:90,
     BASIC:90
 }
-
+const ER_REWARD_MULT = {
+    Abstinence:500,
+    Submergence:450,
+    Inferno:360,
+    Shroud:280,
+    Void:120,
+    No:0
+}
 // Package variables
 var DaysLeft = 0;
 var MAWeeksLeft = 0;
@@ -65,11 +82,13 @@ var CurrentCrystals = 0;
 var DailyDutyRewards = 0;
 var AbyssRewards = 0;
 var MemorialArenaRewards = 0;
+var ERRewards = 0;
 var ArmadaRewards = 0;
 var MonthlyCardRewards = 0;
 var MonthlyCardProgress = 1;
 var TotalCrystalRewards = 0;
 
+var difficulty = ERdifficultyType.Abstinence;
 var LevelBracket = levelBracketType.EXALTED;
 var AbyssTier = AbyssTierType.RED_LOTUS;
 var AbyssTierMultiplier = ABYSS_REWARD_MULT[0][2];
@@ -85,6 +104,7 @@ function updateCalculations(){
     determineAbyssRewards(AbyssTierMultiplier);
     determineArmadaRewards(DaysLeft);
     determineMonthlyCardRewards(DaysLeft);
+    determineERrewards(difficulty);
     determineTotalCrystalRewards();
 }
 
@@ -193,6 +213,35 @@ function setLevelBracket(e){
 
 }
 
+function setERdifficulty(e){
+
+    // Set bracket
+    switch(e.target.value){
+        case '2.25':
+            difficulty = ERdifficultyType.Abstinence;
+            break;
+        case '2.0':
+            difficulty = ERdifficultyType.Submergence;
+            break;
+        case '1.75':
+            difficulty = ERdifficultyType.Inferno;
+            break;
+        case '1.5':
+            difficulty = ERdifficultyType.Shroud;
+            break;
+        case '1.0':
+            difficulty = ERdifficultyType.Void;
+            break;
+        case '1.0':
+            difficulty = ERdifficultyType.No;
+            break;
+    }
+
+    // Calculate MA rewards
+    determineERrewards(difficulty);
+
+}
+
 function determineAbyssTier(e){
 
     let Crystal_Multiplier = 0;
@@ -264,15 +313,44 @@ function determineMemorialArenaRewards(bracket) {
         default:
             MemorialArenaRewards = 0;
     }
-
-    // Output
-    MemorialArenaRewards = MA_Multiplier * MAWeeksLeft;
-    document.getElementById('ma-mult').innerText = MA_Multiplier + " per cycle";
-    document.getElementById('ma-rewards').innerText = MemorialArenaRewards;
-
-    determineTotalCrystalRewards()
+// Output
+MemorialArenaRewards = MA_Multiplier * MAWeeksLeft;
+document.getElementById('ma-mult').innerText = MA_Multiplier + " per cycle";
+document.getElementById('ma-rewards').innerText = MemorialArenaRewards;
+determineTotalCrystalRewards()
 }
 
+function determineERrewards(difficultylvl) {
+
+    let ER_Multiplier = 0;
+
+    switch(difficultylvl) {
+        case ERdifficultyType.Abstinence:
+            ER_Multiplier = ER_REWARD_MULT.Abstinence;
+            break;
+        case ERdifficultyType.Submergence:
+            ER_Multiplier = ER_REWARD_MULT.Submergence;
+            break;
+        case ERdifficultyType.Inferno:
+            ER_Multiplier = ER_REWARD_MULT.Inferno;
+            break;
+        case ERdifficultyType.Shroud:
+            ER_Multiplier = ER_REWARD_MULT.Shroud;
+            break;
+        case ERdifficultyType.Void:
+            ER_Multiplier = ER_REWARD_MULT.Void;
+            break;
+        case ERdifficultyType.No:
+            ER_Multiplier = ER_REWARD_MULT.No;
+            break
+        default:
+            ER_Multiplier = ER_REWARD_MULT.No;
+    }
+// Output
+ERRewards = ER_Multiplier * ArmadaWeeksLeft;
+document.getElementById('ER-rewards').innerText = ERRewards;
+determineTotalCrystalRewards()
+}
 function setMonthlyCard(e){
     
     if(checkboxMonthlyCard.checked){
@@ -338,6 +416,7 @@ function determineTotalCrystalRewards(){
         AbyssRewards +
         MemorialArenaRewards + 
         ArmadaRewards + 
+        ERRewards +
         MonthlyCardRewards;
 
     document.getElementById('total-rewards').innerText = TotalCrystalRewards;
