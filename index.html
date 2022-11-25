@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html>
-    <title>ItzPootz.GitHub.IO</title>
+    <title>vgt789.GitHub.IO</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
@@ -14,7 +14,7 @@
     <!-- Top container -->
     <div class="w3-bar w3-top w3-black w3-large" style="z-index:4">
     <button class="w3-bar-item w3-button w3-hide-large w3-hover-none w3-hover-text-light-grey" onclick="w3_open();"><i class="fa fa-bars"></i>  Menu</button>
-    <span class="w3-bar-item w3-right">ItzPootz.GitHub.IO</span>
+    <span class="w3-bar-item w3-right">vgt789.GitHub.IO</span>
     </div>
 
     <!-- Sidebar/menu -->
@@ -43,6 +43,7 @@
     <div class="w3-container">
         <p>Use this tool to find out how many crystals you will have by the end of a banner in order to maximize your whaling efficiency.</p>
         <p>Regularly farmable crystal sources known to be missing: Monthly login rewards, Battle Pass, Events (this will never be added)</p>
+        <p>This is an updated version from <a href="https://itzpootz.github.io/">itzpootz's original calculator</a>, please show them your support !</p>
     </div>
 
     <div class="w3-container">
@@ -99,10 +100,24 @@
                 </td>
                 <td id="abyss-crystals">0</td>
             </tr>
+            <tr><!--Elysian Realm difficulty-->
+                <td>Elysian Realm difficulty</td>
+                <td>
+                    <select id="ER-difficulty-level">
+                        <option value="2.25">x2.25/2.5/2.75</option>
+                        <option value="2.0">x2.0</option>
+                        <option value="1.75">x1.75</option>
+                        <option value="1.5">1.5</option>
+                        <option value="1.0">1.0</option>
+                        <option value="0.0">no Elysian Realm</option>
+                    </select>
+                </td>
+                <td id="ER-rewards">0</td>
+            </tr>
             <tr><!--Memorial Arena-->
                 <td>Memorial Arena</td>
-                <td id="ma-mult"></td>
                 <td id="ma-rewards">0</td>
+                <td id="ma-mult"></td>
             </tr>
             <tr><!--Armada Contribution-->
                 <td>Armada Contribution</td>
