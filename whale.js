@@ -39,7 +39,9 @@ const AbyssTierType = {
     SINFUL_3:5,
     SINFUL_2:6,
     SINFUL_1:7,
-    FORBIDDEN:8
+    FORBIDDEN:8,
+    MyriadT100:9,
+    MyriadT50:10
 }
 const ERdifficultyType = {
     Abstinence:0,
@@ -52,7 +54,7 @@ const ERdifficultyType = {
 const ABYSS_REWARD_MULT = [
     // Exalted=0
     // Nirv=0, RL=1, A3=2, A2=3, A1=4, S3=5, S2=6, S1=7, F=8
-    [520,500,420,340,280,220,200,190,180],
+    [520,500,420,340,280,220,200,190,180,570,640],
     // Master=1
     [0,420,0,0,260,0,0,180,80],
     // Elite=2
@@ -280,6 +282,12 @@ function determineAbyssTier(e){
             break;
         case 'f':
             AbyssTier = AbyssTierType.FORBIDDEN;
+            break;
+        case 'myrT100':
+            AbyssTier = AbyssTierType.MyriadT100;
+            break;
+        case 'myrT50':
+            AbyssTier = AbyssTierType.MyriadT50;
             break;
         default:
             AbyssTier = AbyssTierType.RED_LOTUS;
