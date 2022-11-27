@@ -2,6 +2,7 @@
 // Field bindings
 const selectEndDate = document.getElementById('banner-end-date');
 const inputCurrentCrystals = document.getElementById('in-current-crystals');
+const checkboxShareActive = document.getElementById('share');
 const selectBracket = document.getElementById('level-bracket');
 const selectExaltedAbyssTier = document.getElementById('select-exalted-abyss-tier');
 const selectAbyssTier = document.getElementById('select-abyss-tier');
@@ -13,6 +14,7 @@ const SSSbosscountlist= document.getElementById('SSS-ma-boss-count');
 
 selectEndDate.addEventListener('change', determineDaysUntilEnd);
 inputCurrentCrystals.addEventListener('change', setCurrentCrystals);
+checkboxShareActive.addEventListener('change',setShareActive);
 selectBracket.addEventListener('change', setLevelBracket);
 selectExaltedAbyssTier.addEventListener('change', determineAbyssTier);
 selectAbyssTier.addEventListener('change', determineAbyssTier);
@@ -39,8 +41,11 @@ const AbyssTierType = {
     SINFUL_3:5,
     SINFUL_2:6,
     SINFUL_1:7,
-    FORBIDDEN:8
+    FORBIDDEN:8,
+    MyriadT100:9,
+    MyriadT50:10
 }
+
 const ERdifficultyType = {
     Abstinence:0,
     Submergence:1,
@@ -51,8 +56,8 @@ const ERdifficultyType = {
 }
 const ABYSS_REWARD_MULT = [
     // Exalted=0
-    // Nirv=0, RL=1, A3=2, A2=3, A1=4, S3=5, S2=6, S1=7, F=8
-    [520,500,420,340,280,220,200,190,180],
+    // Nirv=0, RL=1, A3=2, A2=3, A1=4, S3=5, S2=6, S1=7, F=8, Myr100=9, Myr50=10
+    [520,500,420,340,280,220,200,190,180,570,640],
     // Master=1
     [0,420,0,0,260,0,0,180,80],
     // Elite=2
@@ -76,12 +81,14 @@ const ER_REWARD_MULT = {
 }
 // Package variables
 var DaysLeft = 0;
+var ShareWeeksLeft = 0;
 var MAWeeksLeft = 0;
 var AbyssWeeksLeft = 0;
 var ArmadaWeeksLeft = 0;
 
 var CurrentCrystals = 0;
 var DailyDutyRewards = 0;
+var ShareRewards = 0;
 var AbyssRewards = 0;
 var MemorialArenaRewards = 0;
 var MAbossRewards = 0;
@@ -99,10 +106,12 @@ var AbyssTierMultiplier = ABYSS_REWARD_MULT[0][1];
 var bosscount = 2;
 
 var ActiveArmada = true;
+var ActiveShare = true;
 var MonthlyCard = true;
 
 function updateCalculations(){
     determineDailyDuty(DaysLeft);
+    determineShareRewards(DaysLeft);
     determineMAWeeksLeft(DaysLeft);
     determineAbyssWeeksLeft(DaysLeft);
     determineMemorialArenaRewards(LevelBracket);
@@ -263,10 +272,10 @@ function setSSSbosscount(e){
             break;
     }
 
-    // Calculate MA rewards
+    // Calculate boss rewards
     determineMAbossRewards(bosscount);
-
 }
+
 function determineAbyssTier(e){
 
     let Crystal_Multiplier = 0;
@@ -299,6 +308,12 @@ function determineAbyssTier(e){
             break;
         case 'f':
             AbyssTier = AbyssTierType.FORBIDDEN;
+            break;
+        case 'myrT100':
+            AbyssTier = AbyssTierType.MyriadT100;
+            break;
+        case 'myrT50':
+            AbyssTier = AbyssTierType.MyriadT50;
             break;
         default:
             AbyssTier = AbyssTierType.RED_LOTUS;
@@ -418,6 +433,12 @@ function setArmadaActive(e){
     determineArmadaRewards(DaysLeft);
 }
 
+function setShareActive(e){
+
+    ActiveShare = checkboxShareActive.checked;
+    determineShareRewards(DaysLeft);
+}
+
 function determineArmadaWeeksLeft(d){
     let today = new Date();
 
@@ -432,6 +453,20 @@ function determineArmadaWeeksLeft(d){
     ArmadaWeeksLeft = weeks + ((end_day >= 1) ? 1 : 0);
 }
 
+function determineShareWeeksLeft(d){
+    let today = new Date();
+
+    // Weeks = floor(days/7)
+    let weeks = Math.floor(d/7);
+    // Days left mod 7 = end day offset
+    let end_day_offset = d % 7;
+    // (end day offset + today) mod 7 = end day
+    let end_day = (end_day_offset + today.getDay()) % 7;
+    
+    // MA weeks = weeks + 1 if end_day >= monday
+    ShareWeeksLeft = weeks + ((end_day >= 1) ? 1 : 0);
+}
+
 function determineArmadaRewards(d){
     determineArmadaWeeksLeft(d);
     ArmadaRewards = ActiveArmada ? ArmadaWeeksLeft * 25 : 0;
@@ -440,10 +475,19 @@ function determineArmadaRewards(d){
     determineTotalCrystalRewards()
 }
 
+function determineShareRewards(d){
+    determineShareWeeksLeft(d);
+    ShareRewards = ActiveShare ? ShareWeeksLeft * 30 : 0;
+    document.getElementById('share-rewards').innerText = ShareRewards;
+
+    determineTotalCrystalRewards()
+}
+
 function determineTotalCrystalRewards(){
     
     TotalCrystalRewards = CurrentCrystals +
         DailyDutyRewards +
+        ShareRewards +
         AbyssRewards +
         MemorialArenaRewards + 
         ArmadaRewards + 
