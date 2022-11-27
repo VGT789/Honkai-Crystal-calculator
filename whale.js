@@ -7,6 +7,7 @@ const selectExaltedAbyssTier = document.getElementById('select-exalted-abyss-tie
 const selectAbyssTier = document.getElementById('select-abyss-tier');
 const checkboxMonthlyCard = document.getElementById('monthly-card');
 const checkboxArmadaActive = document.getElementById('armada');
+const checkboxShareActive = document.getElementById('share');
 const inputCardProgress = document.getElementById('card-progress');
 const selectErTier= document.getElementById('ER-difficulty-level');
 
@@ -16,6 +17,7 @@ selectBracket.addEventListener('change', setLevelBracket);
 selectExaltedAbyssTier.addEventListener('change', determineAbyssTier);
 selectAbyssTier.addEventListener('change', determineAbyssTier);
 checkboxArmadaActive.addEventListener('change',setArmadaActive);
+checkboxShareActive.addEventListener('change',setShareActive);
 inputCardProgress.addEventListener('change', setMonthlyCardProgress);
 selectErTier.addEventListener('change', setERdifficulty);
 checkboxMonthlyCard.addEventListener('change',setMonthlyCard);
@@ -77,6 +79,7 @@ var DaysLeft = 0;
 var MAWeeksLeft = 0;
 var AbyssWeeksLeft = 0;
 var ArmadaWeeksLeft = 0;
+var ShareWeeksLeft = 0;
 
 var CurrentCrystals = 0;
 var DailyDutyRewards = 0;
@@ -84,6 +87,7 @@ var AbyssRewards = 0;
 var MemorialArenaRewards = 0;
 var ERRewards = 0;
 var ArmadaRewards = 0;
+var ShareRewards = 0;
 var MonthlyCardRewards = 0;
 var MonthlyCardProgress = 1;
 var TotalCrystalRewards = 0;
@@ -94,6 +98,7 @@ var AbyssTier = AbyssTierType.RED_LOTUS;
 var AbyssTierMultiplier = ABYSS_REWARD_MULT[0][2];
 
 var ActiveArmada = true;
+var ActiveShare = true;
 var MonthlyCard = true;
 
 function updateCalculations(){
@@ -103,6 +108,7 @@ function updateCalculations(){
     determineMemorialArenaRewards(LevelBracket);
     determineAbyssRewards(AbyssTierMultiplier);
     determineArmadaRewards(DaysLeft);
+    determineShareRewards(DaysLeft);
     determineMonthlyCardRewards(DaysLeft);
     determineERrewards(difficulty);
     determineTotalCrystalRewards();
@@ -387,6 +393,12 @@ function setArmadaActive(e){
     determineArmadaRewards(DaysLeft);
 }
 
+function setShareActive(e){
+
+    ActiveShare = checkboxShareActive.checked;
+    determineShareRewards(DaysLeft);
+}
+
 function determineArmadaWeeksLeft(d){
     let today = new Date();
 
@@ -401,10 +413,32 @@ function determineArmadaWeeksLeft(d){
     ArmadaWeeksLeft = weeks + ((end_day >= 1) ? 1 : 0);
 }
 
+function determineShareWeeksLeft(d){
+    let today = new Date();
+
+    // Weeks = floor(days/7)
+    let weeks = Math.floor(d/7);
+    // Days left mod 7 = end day offset
+    let end_day_offset = d % 7;
+    // (end day offset + today) mod 7 = end day
+    let end_day = (end_day_offset + today.getDay()) % 7;
+    
+    // MA weeks = weeks + 1 if end_day >= monday
+    ShareWeeksLeft = weeks + ((end_day >= 1) ? 1 : 0);
+}
+
 function determineArmadaRewards(d){
     determineArmadaWeeksLeft(d);
     ArmadaRewards = ActiveArmada ? ArmadaWeeksLeft * 25 : 0;
     document.getElementById('armada-rewards').innerText = ArmadaRewards;
+
+    determineTotalCrystalRewards()
+}
+
+function determineShareRewards(d){
+    determineShareWeeksLeft(d);
+    ShareRewards = ActiveShare ? ShareWeeksLeft * 30 : 0;
+    document.getElementById('share-rewards').innerText = ShareRewards;
 
     determineTotalCrystalRewards()
 }
@@ -416,6 +450,7 @@ function determineTotalCrystalRewards(){
         AbyssRewards +
         MemorialArenaRewards + 
         ArmadaRewards + 
+        ShareRewards + 
         ERRewards +
         MonthlyCardRewards;
 
