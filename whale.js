@@ -3,6 +3,7 @@
 const selectEndDate = document.getElementById('banner-end-date');
 const inputCurrentCrystals = document.getElementById('in-current-crystals');
 const checkboxShareActive = document.getElementById('share');
+const checkboxHoyoverseActive = document.getElementById('hoyoverse');
 const selectBracket = document.getElementById('level-bracket');
 const selectExaltedAbyssTier = document.getElementById('select-exalted-abyss-tier');
 const selectAbyssTier = document.getElementById('select-abyss-tier');
@@ -15,6 +16,7 @@ const SSSbosscountlist= document.getElementById('SSS-ma-boss-count');
 selectEndDate.addEventListener('change', determineDaysUntilEnd);
 inputCurrentCrystals.addEventListener('change', setCurrentCrystals);
 checkboxShareActive.addEventListener('change',setShareActive);
+checkboxHoyoverseActive.addEventListener('change',setHoyoverseActive);
 selectBracket.addEventListener('change', setLevelBracket);
 selectExaltedAbyssTier.addEventListener('change', determineAbyssTier);
 selectAbyssTier.addEventListener('change', determineAbyssTier);
@@ -88,6 +90,8 @@ var ArmadaWeeksLeft = 0;
 
 var CurrentCrystals = 0;
 var DailyDutyRewards = 0;
+var DailyIGloginRewards = 0;
+var DailyHYVloginRewards = 0;
 var ShareRewards = 0;
 var AbyssRewards = 0;
 var MemorialArenaRewards = 0;
@@ -105,12 +109,15 @@ var AbyssTier = AbyssTierType.RED_LOTUS;
 var AbyssTierMultiplier = ABYSS_REWARD_MULT[0][1];
 var bosscount = 2;
 
+var ActiveHoyoverse = false;
 var ActiveArmada = true;
 var ActiveShare = true;
 var MonthlyCard = true;
 
 function updateCalculations(){
     determineDailyDuty(DaysLeft);
+    determineDailyIGLoginRewards(DaysLeft);
+    determineDailyHYVLoginRewards(DaysLeft);
     determineShareRewards(DaysLeft);
     determineMAWeeksLeft(DaysLeft);
     determineAbyssWeeksLeft(DaysLeft);
@@ -194,6 +201,21 @@ function determineDailyDuty(days){
     determineTotalCrystalRewards()
 }
 
+function determineDailyIGLoginRewards(days){
+
+    DailyIGloginRewards = (days * 13.1777625)-((days * 13.1777625)%50);
+    // Output
+    document.getElementById('ig-login-rewards').innerText = DailyIGloginRewards;
+
+    determineTotalCrystalRewards()
+}
+
+function determineDailyHYVLoginRewards(days){
+    DailyHYVloginRewards = ActiveHoyoverse ? (days * 1.64722032)-((days * 1.64722032)%10) : 0;
+    document.getElementById('hyv-login-rewards').innerText = DailyHYVloginRewards;
+
+    determineTotalCrystalRewards()
+}
 function setLevelBracket(e){
 
     // Set bracket
@@ -439,6 +461,12 @@ function setShareActive(e){
     determineShareRewards(DaysLeft);
 }
 
+function setHoyoverseActive(e){
+
+    ActiveHoyoverse = checkboxHoyoverseActive.checked;
+    determineDailyHYVLoginRewards(DaysLeft);
+}
+
 function determineArmadaWeeksLeft(d){
     let today = new Date();
 
@@ -487,6 +515,8 @@ function determineTotalCrystalRewards(){
     
     TotalCrystalRewards = CurrentCrystals +
         DailyDutyRewards +
+        DailyIGloginRewards +
+        DailyHYVloginRewards +
         ShareRewards +
         AbyssRewards +
         MemorialArenaRewards + 
