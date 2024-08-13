@@ -1,15 +1,18 @@
 <!DOCTYPE html>
 <html>
-    <title>vgt789.GitHub.IO</title>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <style>
-    html,body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
-    </style>
-    <body class="w3-light-grey">
+    <head>
+        <title>Honkai crystal calculator</title>
+        <link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+        <style>
+        html,body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
+        </style>
+        <body class="w3-light-grey">
+    </head>
 
     <!-- Top container -->
     <div class="w3-bar w3-top w3-black w3-large" style="z-index:4">
@@ -24,10 +27,10 @@
     </div>
     <div class="w3-bar-block">
         <a href="#" class="w3-bar-item w3-button w3-padding-16 w3-hide-large w3-dark-grey w3-hover-black" onclick="w3_close()" title="close menu"><i class="fa fa-remove fa-fw"></i>  Close Menu</a>
-        <a href="#" class="w3-bar-item w3-button w3-padding w3-blue">  HI3rd Crystal Calculator</a>
+        <a href="https://vgt789.github.io/Honkai-Crystal-calculator/" class="w3-bar-item w3-button w3-padding w3-blue">  HI3rd Crystal Calculator</a>
+        <a href="https://vgt789.github.io/P5X-Crystal-calculator/" class="w3-bar-item w3-button w3-padding w3-grey">  P5X Crystal Calculator</a>
     </div>
     </nav>
-
 
     <!-- Overlay effect when opening sidebar on small screens -->
     <div class="w3-overlay w3-hide-large w3-animate-opacity" onclick="w3_close()" style="cursor:pointer" title="close side menu" id="myOverlay"></div>
@@ -42,8 +45,9 @@
 
     <div class="w3-container">
         <p>Use this tool to find out how many crystals you will have by the end of a banner in order to maximize your whaling efficiency.</p>
-        <p>Regularly farmable crystal sources known to be missing: Battle Pass, Events (this will never be added)</p>
+        <p>Regularly farmable crystal sources known to be missing: Battle Pass, Events (Those will never be added.)</p>
         <p>This is an updated version from <a href="https://itzpootz.github.io/">itzpootz's original calculator</a>, please show them your support !</p>
+        <p>I've stopped playing the game so if anything changes please send me a dm on discord @vgt789 so I can update it.</p>
     </div>
 
     <div class="w3-container">
@@ -74,7 +78,7 @@
                 <td>Daily hoyoverse login Rewards</td>
                 <td>
                     <input type="checkbox" id="hoyoverse" uncheked>
-                    <label for="hoyoverse">50/month</label>
+                    <label for="hoyoverse"> 50/month</label>
                 </td>
                 <td id="hyv-login-rewards">0</td>
             </tr>
@@ -192,30 +196,31 @@
     <!-- End page content -->
     </div>
 
-        <script>
-            // Get the Sidebar
-            var mySidebar = document.getElementById("mySidebar");
+    <script>
+        // Get the Sidebar
+        var mySidebar = document.getElementById("mySidebar");
 
-            // Get the DIV with overlay effect
-            var overlayBg = document.getElementById("myOverlay");
+        // Get the DIV with overlay effect
+        var overlayBg = document.getElementById("myOverlay");
 
-            // Toggle between showing and hiding the sidebar, and add overlay effect
-            function w3_open() {
-            if (mySidebar.style.display === 'block') {
-                mySidebar.style.display = 'none';
-                overlayBg.style.display = "none";
-            } else {
-                mySidebar.style.display = 'block';
-                overlayBg.style.display = "block";
-            }
-            }
-
-            // Close the sidebar with the close button
-            function w3_close() {
-            mySidebar.style.display = "none";
+        // Toggle between showing and hiding the sidebar, and add overlay effect
+        function w3_open() {
+        if (mySidebar.style.display === 'block') {
+            mySidebar.style.display = 'none';
             overlayBg.style.display = "none";
-            }
-        </script>
+        } else {
+            mySidebar.style.display = 'block';
+            overlayBg.style.display = "block";
+        }
+        }
+
+        // Close the sidebar with the close button
+        function w3_close() {
+        mySidebar.style.display = "none";
+        overlayBg.style.display = "none";
+        }
+    </script>
+
         <script src="whale.js"></script>
 
     </body>
